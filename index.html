@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BioLens</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ================================================================
+       SHARED NAVIGATION BAR
+  ================================================================ -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <button class="nav-logo" id="navLogo" aria-label="BioLens home">BioLens</button>
+
+    <!-- Workspace breadcrumb (hidden on home) -->
+    <span class="nav-sep" id="navSep" style="display:none;">·</span>
+    <span class="nav-filename" id="navFilename" style="display:none;"></span>
+
+    <div class="nav-spacer"></div>
+
+    <!-- Language selector -->
+    <div class="nav-lang" role="navigation" aria-label="Language settings">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      <select id="langSelector" aria-label="Select interface language"></select>
+    </div>
+
+    <!-- Back button (hidden on home) -->
+    <button class="nav-back-btn" id="navBackBtn" style="display:none;" aria-label="Return to home">
+      ← Back
+    </button>
+  </nav>
+
+
+  <!-- ================================================================
+       VIEW 1: HOMEPAGE
+  ================================================================ -->
+  <div id="view-home">
+
+    <!-- Hero -->
+    <section class="home-hero">
+      <h1 data-i18n="home.headline">Understand more. Study less.</h1>
+      <p data-i18n="home.subtitle">Your personal learning space, built around your lectures.</p>
+    </section>
+
+    <!-- Upload card -->
+    <div class="upload-card" id="homeUploadCard">
+
+      <!-- Tab row: PDF / Paste -->
+      <div class="upload-tabs" role="tablist" aria-label="Input method">
+        <button class="upload-tab active" id="tab-pdf" role="tab"
+                aria-selected="true" aria-controls="panel-pdf"
+                data-i18n="upload.tab.pdf">Upload PDF</button>
+        <button class="upload-tab" id="tab-paste" role="tab"
+                aria-selected="false" aria-controls="panel-paste"
+                data-i18n="upload.tab.paste">Paste Notes</button>
+      </div>
+
+      <!-- PDF panel -->
+      <div class="upload-tab-panel active" id="panel-pdf" role="tabpanel" aria-labelledby="tab-pdf">
+        <div class="upload-zone" id="uploadZone" tabindex="0"
+             role="button" aria-label="Click or drag to upload a PDF lecture file">
+          <div class="upload-zone-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p data-i18n="upload.label">Drag your lecture slides here</p>
+          <small data-i18n="upload.hint">Supports text-based PDFs exported from PowerPoint or Keynote. Scanned image PDFs cannot be read.</small>
+          <div class="upload-btn" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Upload Lecture
+          </div>
+          <input type="file" id="pdfInput" accept=".pdf" aria-label="PDF file input" />
+        </div>
+        <div class="upload-status" id="uploadStatus" aria-live="polite"></div>
+      </div>
+
+      <!-- Paste notes panel -->
+      <div class="upload-tab-panel" id="panel-paste" role="tabpanel" aria-labelledby="tab-paste">
+        <div class="paste-panel">
+          <label for="pasteArea" class="paste-label" data-i18n="paste.label">PASTE YOUR NOTES</label>
+          <textarea id="pasteArea" class="paste-textarea" rows="8"
+                    data-i18n="paste.placeholder"
+                    placeholder="Paste your lecture notes, textbook excerpts, or study guide here…"
+                    aria-label="Lecture notes text area"></textarea>
+          <div class="paste-footer">
+            <span class="char-count" id="charCount">0 characters</span>
+            <button class="use-notes-btn" id="useNotesBtn" data-i18n="paste.use-btn">Use These Notes →</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /upload-card -->
+
+    <!-- Feature grid -->
+    <p class="feature-grid-heading" data-i18n="features.heading">YOUR WORKSPACE</p>
+    <div class="feature-grid" role="list">
+
+      <button class="feature-card" data-ws-tab="ws-notes" role="listitem"
+              aria-label="Study Notes workspace">
+        <div class="feature-card-icon" aria-hidden="true">📋</div>
+        <h3 data-i18n="feature.notes.title">Study Notes</h3>
+        <p data-i18n="feature.notes.desc">Organized knowledge from your lectures.</p>
+      </button>
+
+      <button class="feature-card" data-ws-tab="ws-practice" role="listitem"
+              aria-label="Practice workspace">
+        <div class="feature-card-icon" aria-hidden="true">🧩</div>
+        <h3 data-i18n="feature.practice.title">Practice</h3>
+        <p data-i18n="feature.practice.desc">Adaptive questions from your material.</p>
+      </button>
+
+      <button class="feature-card" data-ws-tab="ws-ask" role="listitem"
+              aria-label="AI Tutor workspace">
+        <div class="feature-card-icon" aria-hidden="true">🔎</div>
+        <h3 data-i18n="feature.ask.title">AI Tutor</h3>
+        <p data-i18n="feature.ask.desc">Ask questions about your notes.</p>
+      </button>
+
+      <button class="feature-card" data-ws-tab="ws-visual" role="listitem"
+              aria-label="Visual Learning workspace">
+        <div class="feature-card-icon" aria-hidden="true">🧬</div>
+        <h3 data-i18n="feature.visual.title">Visual Learning</h3>
+        <p data-i18n="feature.visual.desc">DNA replication, step by step.</p>
+      </button>
+
+    </div><!-- /feature-grid -->
+
+    <!-- Footer on home -->
+    <footer class="site-footer">
+      <p data-i18n="footer.main">BioLens — Built for curious biology students everywhere.</p>
+      <p data-i18n="footer.note">No logins, no databases, just learning.</p>
+    </footer>
+
+  </div><!-- /#view-home -->
+
+
+  <!-- ================================================================
+       VIEW 2: WORKSPACE (shown after PDF/paste is loaded)
+  ================================================================ -->
+  <div id="view-workspace">
+
+    <!-- Workspace tab bar -->
+    <div class="ws-tabbar" role="tablist" aria-label="Workspace sections">
+      <button class="ws-tab active" data-panel="ws-notes" role="tab"
+              aria-selected="true" data-i18n="ws.tab.notes">Notes</button>
+      <button class="ws-tab" data-panel="ws-practice" role="tab"
+              aria-selected="false" data-i18n="ws.tab.practice">Practice</button>
+      <button class="ws-tab" data-panel="ws-ask" role="tab"
+              aria-selected="false" data-i18n="ws.tab.ask">Ask AI</button>
+      <button class="ws-tab" data-panel="ws-visual" role="tab"
+              aria-selected="false" data-i18n="ws.tab.visual">Visualize</button>
+    </div>
+
+    <!-- ── Workspace content ── -->
+    <div class="ws-content">
+
+      <!-- ── NOTES PANEL ── -->
+      <div class="ws-panel active" id="ws-notes" role="tabpanel" aria-labelledby="tab-ws-notes">
+        <h2 class="ws-heading" data-i18n="ws.notes.heading">Study Notes</h2>
+        <p class="ws-subheading" data-i18n="ws.notes.subheading">Extracted text from your uploaded material, organized by page.</p>
+
+        <div class="notes-source-bar">
+          <span class="notes-source-badge" id="sourceBadge"></span>
+          <button class="clear-btn" id="clearBtn" aria-label="Clear notes and start over"
+                  data-i18n="ws.notes.clear">Clear &amp; Start Over</button>
+        </div>
+
+        <!-- AI Smart Notes -->
+        <div class="ai-block" id="aiNotesBlock">
+          <div class="ai-block-head">
+            <span class="ai-badge" id="aiNotesBadge">AI</span>
+            <button class="ai-action-btn" id="aiNotesBtn">Generate Smart Notes</button>
+            <span class="ai-status" id="aiNotesStatus"></span>
+          </div>
+          <div class="ai-result" id="aiNotesResult" aria-live="polite"></div>
+        </div>
+
+        <div class="extracted-pages" id="extractedPages" aria-live="polite"></div>
+
+        <!-- Extracted text preview alias card (tutor.js targets previewCard) -->
+        <div id="previewCard" style="display:none;"></div>
+      </div>
+
+      <!-- ── PRACTICE PANEL ── -->
+      <div class="ws-panel" id="ws-practice" role="tabpanel" aria-labelledby="tab-ws-practice">
+        <h2 class="ws-heading" data-i18n="ws.practice.heading">Practice Quiz</h2>
+        <p class="ws-subheading" data-i18n="ws.practice.subheading">Generate personalized AI practice questions from your uploaded lecture.</p>
+
+        <!-- AI Quiz (primary and only practice feature) -->
+        <div class="ai-block" id="aiQuizBlock">
+          <div class="ai-block-head">
+            <span class="ai-badge" id="aiQuizBadge">AI</span>
+            <div class="ai-quiz-controls">
+              <label class="ai-ctrl">Questions
+                <select id="aiQuizCount">
+                  <option value="3" selected>3</option>
+                  <option value="5">5</option>
+                  <option value="7">7</option>
+                  <option value="10">10</option>
+                </select>
+              </label>
+              <label class="ai-ctrl">Difficulty
+                <select id="aiQuizDifficulty">
+                  <option value="easy">Easy</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </label>
+              <button class="ai-action-btn" id="aiQuizBtn">Generate AI Quiz</button>
+            </div>
+            <span class="ai-status" id="aiQuizStatus"></span>
+          </div>
+          <div class="ai-result" id="aiQuizResult" aria-live="polite"></div>
+        </div>
+
+        <!-- Rule-based quiz retained ONLY so tutor.js keeps initialising;
+             hidden from the interface. Do not surface in the UI. -->
+        <div id="quizGenCard" hidden aria-hidden="true">
+          <button class="generate-btn" id="generateQuizBtn">unused</button>
+          <div class="generated-quiz" id="generatedQuiz"></div>
+        </div>
+      </div>
+
+      <!-- ── ASK AI PANEL ── -->
+      <div class="ws-panel" id="ws-ask" role="tabpanel" aria-labelledby="tab-ws-ask">
+        <h2 class="ws-heading" data-i18n="ws.ask.heading">Ask a Question</h2>
+        <p class="ws-subheading" data-i18n="ws.ask.subheading">Searches your notes by keyword matching — not AI. Returns the most relevant passage.</p>
+
+        <!-- qaCard: AI answer with keyword-search fallback -->
+        <div id="qaCard">
+          <div class="qa-input-row">
+            <input type="text" id="questionInput" class="question-input"
+                   data-i18n="ask.placeholder"
+                   placeholder="e.g. What is the role of helicase?"
+                   aria-label="Question input" />
+            <button class="ai-action-btn" id="aiAskBtn">Ask AI</button>
+            <button class="search-btn" id="searchBtn" data-i18n="ask.button">Keyword Search</button>
+          </div>
+          <span class="ai-status" id="aiAskStatus"></span>
+          <div class="ai-result" id="aiAskResult" aria-live="polite"></div>
+          <div class="qa-result" id="qaResult" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- ── VISUALIZE PANEL ── -->
+      <div class="ws-panel" id="ws-visual" role="tabpanel" aria-labelledby="tab-ws-visual">
+
+        <!-- Mode toggle: My Lecture vs Explore Demo -->
+        <div class="viz-mode-toggle" role="group" aria-label="Visualization mode">
+          <button class="viz-mode-btn active" id="vizModeLecture" data-viz-mode="lecture">
+            Visualize My Lecture
+          </button>
+          <button class="viz-mode-btn" id="vizModeDemo" data-viz-mode="demo">
+            Explore Demo
+          </button>
+        </div>
+
+        <!-- MODE A: My Lecture (AI-generated from the uploaded PDF) -->
+        <div id="vizLectureMode">
+          <div class="viz-lecture-head">
+            <button class="ai-action-btn" id="vizGenerateBtn">Visualize This Lecture</button>
+            <span class="ai-status" id="vizStatus"></span>
+          </div>
+          <div class="viz-container" id="vizContainer" aria-live="polite">
+            <p class="viz-placeholder" id="vizPlaceholder">
+              Upload a lecture, then click <strong>Visualize This Lecture</strong> to generate
+              an interactive diagram from its content.
+            </p>
+          </div>
+        </div>
+
+        <!-- MODE B: Explore Demo (the original hardcoded DNA lesson) -->
+        <div id="vizDemoMode" style="display:none;">
+        <div class="sample-banner" role="note">
+          <strong>Sample lesson.</strong> This DNA Replication visualization is a built-in
+          demo, not generated from your uploaded lecture.
+        </div>
+        <h2 class="ws-heading" data-i18n="ws.visual.heading">DNA Replication</h2>
+        <p class="ws-subheading" data-i18n="intro.body">
+          Every time a cell divides, it must copy all of its DNA so each daughter cell
+          gets a complete set of genetic instructions. This process — called DNA replication —
+          happens in four key stages. Click each step below.
+        </p>
+
+        <!-- Study mode switcher (i18n.js shows this when lang ≠ en) -->
+        <div class="mode-switcher-row" id="modeSwitcher" role="group" aria-label="Study mode">
+          <span class="mode-label" data-i18n="mode.label">Study mode:</span>
+          <button class="mode-btn active" data-mode="original" data-i18n="mode.original">Original</button>
+          <button class="mode-btn" data-mode="translated" data-i18n="mode.translated">Translated</button>
+          <button class="mode-btn" data-mode="bilingual" data-i18n="mode.bilingual">Bilingual</button>
+        </div>
+
+        <!-- Step navigation -->
+        <section class="steps-nav" role="tablist" aria-label="DNA replication steps">
+          <button class="step-btn active" data-step="unwinding" role="tab" aria-selected="true">
+            <span class="step-number">1</span>
+            <span data-i18n="step.unwinding">Unwinding</span>
+          </button>
+          <div class="connector" aria-hidden="true"></div>
+          <button class="step-btn" data-step="priming" role="tab" aria-selected="false">
+            <span class="step-number">2</span>
+            <span data-i18n="step.priming">Priming</span>
+          </button>
+          <div class="connector" aria-hidden="true"></div>
+          <button class="step-btn" data-step="elongation" role="tab" aria-selected="false">
+            <span class="step-number">3</span>
+            <span data-i18n="step.elongation">Elongation</span>
+          </button>
+          <div class="connector" aria-hidden="true"></div>
+          <button class="step-btn" data-step="finishing" role="tab" aria-selected="false">
+            <span class="step-number">4</span>
+            <span data-i18n="step.finishing">Finishing</span>
+          </button>
+        </section>
+
+        <!-- Step content panels -->
+        <section class="step-panel">
+
+          <!-- STEP 1: UNWINDING -->
+          <div class="step-content active" id="step-unwinding">
+            <div class="step-layout">
+              <div class="step-text">
+                <div class="step-heading-row"><h2>Step 1: Unwinding</h2></div>
+                <p class="step-subtitle">Breaking open the double helix</p>
+                <p>DNA normally exists as a twisted "double helix" — two strands wound around each other like a spiral staircase. Before copying can begin, this twist must be unzipped.</p>
+                <ul>
+                  <li><strong>Helicase</strong> is an enzyme that travels along the DNA and breaks the weak bonds between the two strands, like unzipping a zipper.</li>
+                  <li>This creates a <strong>"replication bubble"</strong> — an open region with two exposed single strands, each ready to serve as a template.</li>
+                  <li>Proteins called <strong>SSBPs</strong> (single-strand binding proteins) hold the strands apart so they don't snap back together.</li>
+                </ul>
+                <div class="key-fact">💡 <strong>Key molecule:</strong> Helicase — the "unzipper" of DNA</div>
+              </div>
+              <div class="step-diagram" aria-label="Diagram of DNA unwinding">
+                <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diag1-title">
+                  <title id="diag1-title">DNA unwinding: helicase separates two strands</title>
+                  <g opacity="0.85">
+                    <path d="M 30 20 Q 45 40 30 60 Q 15 80 30 100 Q 45 120 30 140 Q 15 160 30 180" stroke="#9CA3AF" stroke-width="2.5" fill="none"/>
+                    <path d="M 50 20 Q 35 40 50 60 Q 65 80 50 100 Q 35 120 50 140 Q 65 160 50 180" stroke="#D1D5DB" stroke-width="2.5" fill="none"/>
+                    <line x1="30" y1="60" x2="50" y2="60" stroke="#6B7280" stroke-width="1.8"/>
+                    <line x1="30" y1="100" x2="50" y2="100" stroke="#6B7280" stroke-width="1.8"/>
+                    <line x1="30" y1="140" x2="50" y2="140" stroke="#6B7280" stroke-width="1.8"/>
+                  </g>
+                  <text x="72" y="105" font-size="20" fill="#9CA3AF">→</text>
+                  <circle cx="130" cy="100" r="22" fill="#F9FAFB" stroke="#9CA3AF" stroke-width="1.8"/>
+                  <text x="130" y="97" text-anchor="middle" font-size="9" fill="#374151" font-weight="bold">Heli-</text>
+                  <text x="130" y="109" text-anchor="middle" font-size="9" fill="#374151" font-weight="bold">case</text>
+                  <path d="M 158 30 Q 165 60 158 90 Q 151 120 158 150 Q 165 180 158 200" stroke="#9CA3AF" stroke-width="2.5" fill="none"/>
+                  <path d="M 210 30 Q 203 60 210 90 Q 217 120 210 150 Q 203 180 210 200" stroke="#D1D5DB" stroke-width="2.5" fill="none"/>
+                  <rect x="162" y="48" width="14" height="8" rx="3" fill="#F9FAFB" stroke="#C9C8C4" stroke-width="1"/>
+                  <text x="169" y="55" text-anchor="middle" font-size="5.5" fill="#6B7280">SSB</text>
+                  <rect x="162" y="88" width="14" height="8" rx="3" fill="#F9FAFB" stroke="#C9C8C4" stroke-width="1"/>
+                  <text x="169" y="95" text-anchor="middle" font-size="5.5" fill="#6B7280">SSB</text>
+                  <rect x="162" y="128" width="14" height="8" rx="3" fill="#F9FAFB" stroke="#C9C8C4" stroke-width="1"/>
+                  <text x="169" y="135" text-anchor="middle" font-size="5.5" fill="#6B7280">SSB</text>
+                  <text x="40" y="200" text-anchor="middle" font-size="9" fill="#9CA3AF">Double helix</text>
+                  <text x="184" y="215" text-anchor="middle" font-size="9" fill="#9CA3AF">Separated</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: PRIMING -->
+          <div class="step-content" id="step-priming">
+            <div class="step-layout">
+              <div class="step-text">
+                <div class="step-heading-row"><h2>Step 2: Priming</h2></div>
+                <p class="step-subtitle">Setting the starting line</p>
+                <p>DNA polymerase — the main copying enzyme — cannot start from scratch. It needs a short "starter" sequence to attach to. That starter is called a <strong>primer</strong>.</p>
+                <ul>
+                  <li><strong>Primase</strong> reads the exposed single strand and builds a short RNA primer (about 10 nucleotides long).</li>
+                  <li>The primer marks the exact spot where copying will begin — like placing a bookmark in a book.</li>
+                  <li>Each template strand gets its own primer, so both strands can be copied simultaneously.</li>
+                </ul>
+                <div class="key-fact">💡 <strong>Key molecule:</strong> Primase — writes the "start here" signal</div>
+              </div>
+              <div class="step-diagram" aria-label="Diagram of RNA primer on DNA template">
+                <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diag2-title">
+                  <title id="diag2-title">RNA primer laid down by Primase on exposed DNA strand</title>
+                  <path d="M 20 70 L 240 70" stroke="#9CA3AF" stroke-width="2.5"/>
+                  <path d="M 20 130 L 240 130" stroke="#D1D5DB" stroke-width="2.5"/>
+                  <line x1="60" y1="70" x2="60" y2="130" stroke="#C9C8C4" stroke-width="1.5" stroke-dasharray="4,3"/>
+                  <line x1="100" y1="70" x2="100" y2="130" stroke="#C9C8C4" stroke-width="1.5" stroke-dasharray="4,3"/>
+                  <line x1="140" y1="70" x2="140" y2="130" stroke="#C9C8C4" stroke-width="1.5" stroke-dasharray="4,3"/>
+                  <line x1="180" y1="70" x2="180" y2="130" stroke="#C9C8C4" stroke-width="1.5" stroke-dasharray="4,3"/>
+                  <rect x="40" y="50" width="100" height="14" rx="4" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+                  <text x="90" y="61" text-anchor="middle" font-size="9" fill="#166534" font-weight="bold">RNA Primer</text>
+                  <ellipse cx="155" cy="52" rx="26" ry="16" fill="#F9FAFB" stroke="#9CA3AF" stroke-width="1.5"/>
+                  <text x="155" y="55" text-anchor="middle" font-size="9" fill="#374151" font-weight="bold">Primase</text>
+                  <text x="20" y="65" font-size="9" fill="#9CA3AF">Template 1 →</text>
+                  <text x="20" y="148" font-size="9" fill="#9CA3AF">Template 2 →</text>
+                  <text x="90" y="168" text-anchor="middle" font-size="9" fill="#9CA3AF">↑ primer starts here</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: ELONGATION -->
+          <div class="step-content" id="step-elongation">
+            <div class="step-layout">
+              <div class="step-text">
+                <div class="step-heading-row"><h2>Step 3: Elongation</h2></div>
+                <p class="step-subtitle">Building the new strands</p>
+                <p>This is the main copying phase. <strong>DNA Polymerase III</strong> attaches to the primer and reads the template strand, adding matching DNA nucleotides one at a time.</p>
+                <ul>
+                  <li>The rule: <strong>A pairs with T</strong>, and <strong>C pairs with G</strong> — DNA polymerase follows this perfectly, letter by letter.</li>
+                  <li>The <em>leading strand</em> is built smoothly; the <em>lagging strand</em> is built in short chunks called <strong>Okazaki fragments</strong>.</li>
+                  <li>DNA polymerase also proofreads, detecting and fixing mistakes as it goes.</li>
+                </ul>
+                <div class="key-fact">💡 <strong>Key molecule:</strong> DNA Polymerase III — the main "copy machine"</div>
+              </div>
+              <div class="step-diagram" aria-label="Diagram of elongation">
+                <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diag3-title">
+                  <title id="diag3-title">DNA polymerase building new strands during elongation</title>
+                  <path d="M 130 40 L 20 110" stroke="#9CA3AF" stroke-width="2.2"/>
+                  <path d="M 130 40 L 240 110" stroke="#D1D5DB" stroke-width="2.2"/>
+                  <circle cx="130" cy="40" r="16" fill="#F9FAFB" stroke="#9CA3AF" stroke-width="1.5"/>
+                  <text x="130" y="37" text-anchor="middle" font-size="7.5" fill="#374151" font-weight="bold">Heli-</text>
+                  <text x="130" y="48" text-anchor="middle" font-size="7.5" fill="#374151" font-weight="bold">case</text>
+                  <path d="M 20 110 L 90 150" stroke="#6B7280" stroke-width="2.5"/>
+                  <ellipse cx="100" cy="155" rx="24" ry="14" fill="#F9FAFB" stroke="#9CA3AF" stroke-width="1.5"/>
+                  <text x="100" y="152" text-anchor="middle" font-size="7" fill="#374151" font-weight="bold">DNA Pol</text>
+                  <text x="100" y="162" text-anchor="middle" font-size="7" fill="#374151">III</text>
+                  <path d="M 240 110 L 180 150" stroke="#6B7280" stroke-width="2.5"/>
+                  <path d="M 240 110 L 216 130" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="6,4"/>
+                  <text x="225" y="148" text-anchor="middle" font-size="8" fill="#9CA3AF">Okazaki</text>
+                  <text x="225" y="158" text-anchor="middle" font-size="8" fill="#9CA3AF">fragment</text>
+                  <text x="55" y="130" text-anchor="middle" font-size="9" fill="#6B7280">A-T C-G</text>
+                  <text x="200" y="130" text-anchor="middle" font-size="9" fill="#6B7280">C-G A-T</text>
+                  <text x="60" y="175" text-anchor="middle" font-size="9" fill="#9CA3AF">Leading strand</text>
+                  <text x="200" y="175" text-anchor="middle" font-size="9" fill="#9CA3AF">Lagging strand</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: FINISHING -->
+          <div class="step-content" id="step-finishing">
+            <div class="step-layout">
+              <div class="step-text">
+                <div class="step-heading-row"><h2>Step 4: Finishing</h2></div>
+                <p class="step-subtitle">Sealing and proofreading</p>
+                <p>After elongation, the new DNA strands need to be completed and cleaned up before the cell can use them.</p>
+                <ul>
+                  <li><strong>DNA Polymerase I</strong> removes the RNA primers and fills the gaps with correct DNA nucleotides.</li>
+                  <li><strong>DNA Ligase</strong> acts like molecular glue, sealing the small nicks between fragments into one continuous strand.</li>
+                  <li>The result: two identical double-stranded DNA molecules — each with one original and one new strand. This is <em>semi-conservative replication</em>.</li>
+                </ul>
+                <div class="key-fact">💡 <strong>Key molecule:</strong> DNA Ligase — the "glue" that seals the new strand</div>
+              </div>
+              <div class="step-diagram" aria-label="Diagram of two complete DNA copies">
+                <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diag4-title">
+                  <title id="diag4-title">Two complete DNA double helices after replication</title>
+                  <path d="M 40 20 Q 55 45 40 70 Q 25 95 40 120 Q 55 145 40 170 Q 25 195 40 210" stroke="#9CA3AF" stroke-width="2.5" fill="none"/>
+                  <path d="M 65 20 Q 50 45 65 70 Q 80 95 65 120 Q 50 145 65 170 Q 80 195 65 210" stroke="#D1D5DB" stroke-width="2.5" fill="none" stroke-dasharray="6,3"/>
+                  <line x1="40" y1="70" x2="65" y2="70" stroke="#6B7280" stroke-width="1.8"/>
+                  <line x1="40" y1="120" x2="65" y2="120" stroke="#6B7280" stroke-width="1.8"/>
+                  <line x1="40" y1="170" x2="65" y2="170" stroke="#6B7280" stroke-width="1.8"/>
+                  <text x="52" y="220" text-anchor="middle" font-size="8" fill="#9CA3AF">Copy 1</text>
+                  <ellipse cx="130" cy="110" rx="28" ry="18" fill="#F9FAFB" stroke="#C9C8C4" stroke-width="1.5"/>
+                  <text x="130" y="107" text-anchor="middle" font-size="8.5" fill="#374151" font-weight="bold">DNA</text>
+                  <text x="130" y="118" text-anchor="middle" font-size="8.5" fill="#374151" font-weight="bold">Ligase</text>
+                  <path d="M 192 20 Q 207 45 192 70 Q 177 95 192 120 Q 207 145 192 170 Q 177 195 192 210" stroke="#9CA3AF" stroke-width="2.5" fill="none"/>
+                  <path d="M 217 20 Q 202 45 217 70 Q 232 95 217 120 Q 202 145 217 170 Q 232 195 217 210" stroke="#D1D5DB" stroke-width="2.5" fill="none" stroke-dasharray="6,3"/>
+                  <line x1="192" y1="70" x2="217" y2="70" stroke="#6B7280" stroke-width="1.8"/>
+                  <line x1="192" y1="120" x2="217" y2="120" stroke="#6B7280" stroke-width="1.8"/>
+                  <line x1="192" y1="170" x2="217" y2="170" stroke="#6B7280" stroke-width="1.8"/>
+                  <text x="205" y="220" text-anchor="middle" font-size="8" fill="#9CA3AF">Copy 2</text>
+                  <line x1="20" y1="8" x2="40" y2="8" stroke="#9CA3AF" stroke-width="2"/>
+                  <text x="44" y="12" font-size="8" fill="#9CA3AF">Original</text>
+                  <line x1="130" y1="8" x2="150" y2="8" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="4,2"/>
+                  <text x="154" y="12" font-size="8" fill="#9CA3AF">New</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+        </section><!-- /step-panel -->
+
+        <!-- Built-in quiz -->
+        <section class="quiz-section">
+          <h2 data-i18n="quiz.heading">🧬 Quick Quiz</h2>
+          <p class="quiz-intro" data-i18n="quiz.intro">Test what you've learned! Choose the best answer for each question.</p>
+
+          <div class="quiz-container" id="quiz">
+            <div class="question-card" id="q1">
+              <p class="question-text"><strong>Q1.</strong> Which enzyme is responsible for unwinding the DNA double helix during replication?</p>
+              <div class="options">
+                <label class="option"><input type="radio" name="q1" value="a" /><span>A) DNA Polymerase III</span></label>
+                <label class="option"><input type="radio" name="q1" value="b" /><span>B) Helicase</span></label>
+                <label class="option"><input type="radio" name="q1" value="c" /><span>C) DNA Ligase</span></label>
+                <label class="option"><input type="radio" name="q1" value="d" /><span>D) Primase</span></label>
+              </div>
+              <div class="feedback" id="feedback-q1" aria-live="polite"></div>
+            </div>
+
+            <div class="question-card" id="q2">
+              <p class="question-text"><strong>Q2.</strong> What is the role of a primer in DNA replication?</p>
+              <div class="options">
+                <label class="option"><input type="radio" name="q2" value="a" /><span>A) It seals the gaps between Okazaki fragments</span></label>
+                <label class="option"><input type="radio" name="q2" value="b" /><span>B) It holds the two DNA strands apart after unwinding</span></label>
+                <label class="option"><input type="radio" name="q2" value="c" /><span>C) It provides a starting point for DNA Polymerase to begin copying</span></label>
+                <label class="option"><input type="radio" name="q2" value="d" /><span>D) It removes the original DNA strand after copying</span></label>
+              </div>
+              <div class="feedback" id="feedback-q2" aria-live="polite"></div>
+            </div>
+
+            <div class="question-card" id="q3">
+              <p class="question-text"><strong>Q3.</strong> DNA replication is described as "semi-conservative." What does this mean?</p>
+              <div class="options">
+                <label class="option"><input type="radio" name="q3" value="a" /><span>A) Only half of the DNA is copied each time</span></label>
+                <label class="option"><input type="radio" name="q3" value="b" /><span>B) Each new DNA molecule contains one original strand and one new strand</span></label>
+                <label class="option"><input type="radio" name="q3" value="c" /><span>C) Both new DNA molecules are made entirely of new strands</span></label>
+                <label class="option"><input type="radio" name="q3" value="d" /><span>D) The original DNA is destroyed after replication</span></label>
+              </div>
+              <div class="feedback" id="feedback-q3" aria-live="polite"></div>
+            </div>
+
+            <button class="submit-btn" id="submitQuiz" data-i18n="quiz.submit">Check My Answers</button>
+            <div class="quiz-result" id="quizResult" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <!-- Academic vocabulary -->
+        <section class="vocab-section" aria-label="Academic vocabulary">
+          <details class="vocab-details">
+            <summary class="vocab-summary">
+              <span data-i18n="vocab.heading">Academic Vocabulary</span>
+              <span class="vocab-count-note" data-i18n="vocab.subheading">15 key terms · translations verified for built-in content only</span>
+            </summary>
+            <div id="vocabTableContainer" class="vocab-table-container" role="region" aria-label="Vocabulary table">
+              <!-- Rendered by i18n.js -->
+            </div>
+          </details>
+        </section>
+
+        </div><!-- /#vizDemoMode -->
+
+      </div><!-- /#ws-visual -->
+
+    </div><!-- /.ws-content -->
+
+    <!-- Footer in workspace -->
+    <footer class="site-footer">
+      <p data-i18n="footer.main">BioLens — Built for curious biology students everywhere.</p>
+      <p data-i18n="footer.note">No logins, no databases, just learning.</p>
+    </footer>
+
+  </div><!-- /#view-workspace -->
+
+
+  <!-- ================================================================
+       SCRIPTS
+  ================================================================ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  <script src="script.js"></script>
+  <script src="tutor.js"></script>
+  <script src="i18n.js"></script>
+  <script src="ai.js"></script>
+  <script src="visualize.js"></script>
+  <script src="demo-data.js"></script>
+  <script src="demo.js"></script>
+  <script>
+  // ================================================================
+  //  APP CONTROLLER
+  //  Handles: home↔workspace view switching, workspace tab switching,
+  //  feature-card clicks, nav interactions.
+  //  Does NOT duplicate logic already in script.js / tutor.js / i18n.js.
+  // ================================================================
+  (function () {
+
+    // ── Workspace tab switching ────────────────────────────────────
+    function activateWsTab(panelId) {
+      document.querySelectorAll('.ws-tab').forEach(btn => {
+        const active = btn.dataset.panel === panelId;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', active);
+      });
+      document.querySelectorAll('.ws-panel').forEach(p => {
+        p.classList.toggle('active', p.id === panelId);
+      });
+    }
+
+    document.querySelectorAll('.ws-tab').forEach(btn => {
+      btn.addEventListener('click', () => activateWsTab(btn.dataset.panel));
+    });
+
+    // ── View switching ─────────────────────────────────────────────
+    function openWorkspace(filename, targetPanel) {
+      // Set breadcrumb
+      if (filename) {
+        document.getElementById('navFilename').textContent = filename;
+        document.getElementById('navFilename').style.display = '';
+        document.getElementById('navSep').style.display = '';
+      }
+      document.getElementById('navBackBtn').style.display = '';
+      document.body.classList.add('workspace-active');
+
+      // Activate the right tab
+      activateWsTab(targetPanel || 'ws-notes');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goHome() {
+      document.body.classList.remove('workspace-active');
+      document.getElementById('navFilename').style.display = 'none';
+      document.getElementById('navSep').style.display = 'none';
+      document.getElementById('navBackBtn').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('navLogo').addEventListener('click', goHome);
+    document.getElementById('navBackBtn').addEventListener('click', goHome);
+
+    // ── Feature card clicks ─────────────────────────────────────────
+    document.querySelectorAll('.feature-card[data-ws-tab]').forEach(card => {
+      card.addEventListener('click', () => {
+        const target = card.dataset.wsTab;
+        // If notes are already loaded, go straight to that tab
+        const notesLoaded = window._notesLoaded;
+        if (notesLoaded) {
+          openWorkspace(null, target);
+        } else {
+          // No notes loaded: scroll to and shake the upload card
+          const uploadCard = document.getElementById('homeUploadCard');
+          uploadCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          uploadCard.classList.add('shake');
+          setTimeout(() => uploadCard.classList.remove('shake'), 600);
+          // After scroll, also store the intended target so we can open
+          // the right tab once upload completes
+          window._pendingWsTab = target;
+        }
+      });
+    });
+
+    // ── Upload tab switching (home page tabs: PDF / Paste) ─────────
+    document.querySelectorAll('.upload-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panelId = btn.getAttribute('aria-controls');
+        document.querySelectorAll('.upload-tab').forEach(b => {
+          b.classList.toggle('active', b === btn);
+          b.setAttribute('aria-selected', b === btn);
+        });
+        document.querySelectorAll('.upload-tab-panel').forEach(p => {
+          p.classList.toggle('active', p.id === panelId);
+        });
+      });
+    });
+
+    // ── Hook into tutor.js showPreview to open workspace ──────────
+    // tutor.js calls showPreview() after successful extraction.
+    // We intercept by wrapping it after it's defined.
+    function hookTutor() {
+      if (typeof showPreview !== 'function') {
+        setTimeout(hookTutor, 100);
+        return;
+      }
+      const originalShowPreview = showPreview;
+      window.showPreview = function (badgeText, pages) {
+        // Call original tutor.js logic
+        originalShowPreview(badgeText, pages);
+
+        // Mark notes as loaded
+        window._notesLoaded = true;
+
+        // Move sourceBadge and extractedPages into ws-notes panel
+        // (tutor.js writes to these IDs; they are already in ws-notes)
+
+        // Open workspace at the right tab
+        const target = window._pendingWsTab || 'ws-notes';
+        window._pendingWsTab = null;
+
+        // A new lecture was loaded — clear any stale visualization and
+        // default the Visualize tab to "My Lecture" mode.
+        if (typeof window._resetVizIfLectureChanged === 'function') {
+          window._resetVizIfLectureChanged();
+        }
+        if (typeof window._defaultVizMode === 'function') {
+          window._defaultVizMode();
+        }
+
+        // tutor.js just set quizGenCard to display:block — re-hide it,
+        // since the rule-based quiz is retired from the UI.
+        if (typeof window._keepRuleQuizHidden === 'function') {
+          window._keepRuleQuizHidden();
+        }
+
+        // A new lecture means any previous AI quiz is stale — clear it.
+        if (typeof window._clearAiQuiz === 'function') {
+          window._clearAiQuiz();
+        }
+
+        // Extract filename from badgeText
+        const filename = badgeText.replace(/^[^\s]+\s/, '').replace(/\s—.*$/, '').trim();
+        openWorkspace(filename || 'Your notes', target);
+      };
+    }
+    hookTutor();
+
+    // Also hook clearBtn to go home
+    const clearBtn = document.getElementById('clearBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        window._notesLoaded = false;
+        goHome();
+      });
+    }
+
+    // ── Keep qaCard visible; keep the rule-based quizGenCard HIDDEN ──
+    // tutor.js toggles display on these; the rule-based quiz is retired
+    // from the UI, so we force it to stay hidden (the AI quiz replaces it).
+    function showWorkspacePanels() {
+      const qc = document.getElementById('qaCard');
+      if (qc) qc.style.removeProperty('display');
+      keepRuleQuizHidden();
+    }
+    // tutor.js's showPreview() sets quizGenCard.style.display='block' on every
+    // load, which would override the `hidden` attribute. This re-hides it.
+    function keepRuleQuizHidden() {
+      const pc = document.getElementById('quizGenCard');
+      if (pc) pc.style.display = 'none';
+    }
+    window._keepRuleQuizHidden = keepRuleQuizHidden;
+    // Run after a tick to let tutor.js initialize
+    setTimeout(showWorkspacePanels, 150);
+
+    // previewCard is a stub in ws-notes — tutor.js checks its display
+    // style to decide whether to show cards. Keep it "visible" (height 0).
+    const previewCard = document.getElementById('previewCard');
+    if (previewCard) {
+      previewCard.style.display = 'block';
+      previewCard.style.height = '0';
+      previewCard.style.overflow = 'hidden';
+    }
+
+    // ── i18n init ──────────────────────────────────────────────────
+    // Add missing i18n keys that the new layout introduces
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.i18n) {
+        // Patch UI_STRINGS for new keys (home, workspace)
+        const extra = {
+          'home.headline':           { en:'Understand more. Study less.', zh:'理解更多，学习更少。', es:'Entiende más. Estudia menos.', ko:'더 많이 이해하고, 덜 공부하세요.', ja:'もっと理解して、学習を減らそう。', fr:'Comprenez plus. Étudiez moins.' },
+          'home.subtitle':           { en:'Your personal learning space, built around your lectures.', zh:'以你的讲义为核心，打造你的个人学习空间。', es:'Tu espacio de aprendizaje personal, construido alrededor de tus clases.', ko:'당신의 강의를 중심으로 만들어진 개인 학습 공간.', ja:'あなたの講義を中心に構築された、個人的な学習スペース。', fr:'Votre espace d\'apprentissage personnel, construit autour de vos cours.' },
+          'features.heading':        { en:'YOUR WORKSPACE', zh:'你的工作区', es:'TU ESPACIO DE TRABAJO', ko:'내 작업공간', ja:'あなたのワークスペース', fr:'VOTRE ESPACE DE TRAVAIL' },
+          'feature.notes.title':     { en:'Study Notes', zh:'学习笔记', es:'Notas de Estudio', ko:'학습 노트', ja:'学習ノート', fr:'Notes de Cours' },
+          'feature.notes.desc':      { en:'Organized knowledge from your lectures.', zh:'讲义中的系统知识。', es:'Conocimiento organizado de tus clases.', ko:'강의에서 정리된 지식.', ja:'講義から整理された知識。', fr:'Connaissances organisées de vos cours.' },
+          'feature.practice.title':  { en:'Practice', zh:'练习', es:'Práctica', ko:'연습', ja:'練習', fr:'Pratique' },
+          'feature.practice.desc':   { en:'Adaptive questions from your material.', zh:'基于你的材料的适应性题目。', es:'Preguntas adaptativas de tu material.', ko:'자료에서 생성된 맞춤형 문제.', ja:'あなたの教材から生成された問題。', fr:'Questions adaptatives issues de votre matériel.' },
+          'feature.ask.title':       { en:'AI Tutor', zh:'AI 辅导', es:'Tutor IA', ko:'AI 튜터', ja:'AIチューター', fr:'Tuteur IA' },
+          'feature.ask.desc':        { en:'Ask questions about your notes.', zh:'就笔记提问。', es:'Haz preguntas sobre tus notas.', ko:'노트에 대한 질문을 하세요.', ja:'ノートについて質問しよう。', fr:'Posez des questions sur vos notes.' },
+          'feature.visual.title':    { en:'Visual Learning', zh:'可视化学习', es:'Aprendizaje Visual', ko:'시각적 학습', ja:'ビジュアル学習', fr:'Apprentissage Visuel' },
+          'feature.visual.desc':     { en:'DNA replication, step by step.', zh:'逐步了解 DNA 复制。', es:'Replicación del ADN, paso a paso.', ko:'DNA 복제, 단계별로.', ja:'DNA複製をステップごとに。', fr:'Réplication de l\'ADN, étape par étape.' },
+          'ws.tab.notes':            { en:'Notes', zh:'笔记', es:'Notas', ko:'노트', ja:'ノート', fr:'Notes' },
+          'ws.tab.practice':         { en:'Practice', zh:'练习', es:'Práctica', ko:'연습', ja:'練習', fr:'Pratique' },
+          'ws.tab.ask':              { en:'Ask AI', zh:'提问', es:'Preguntar', ko:'AI 질문', ja:'AIに聞く', fr:'Demander' },
+          'ws.tab.visual':           { en:'Visualize', zh:'可视化', es:'Visualizar', ko:'시각화', ja:'可視化', fr:'Visualiser' },
+          'ws.notes.heading':        { en:'Study Notes', zh:'学习笔记', es:'Notas de Estudio', ko:'학습 노트', ja:'学習ノート', fr:'Notes de Cours' },
+          'ws.notes.subheading':     { en:'Extracted text from your uploaded material, organized by page.', zh:'从上传材料中提取的文本，按页面整理。', es:'Texto extraído de tu material subido, organizado por página.', ko:'업로드된 자료에서 추출한 텍스트, 페이지별 정리.', ja:'アップロードした資料から抽出されたテキスト、ページ別に整理。', fr:'Texte extrait de votre matériel téléchargé, organisé par page.' },
+          'ws.notes.clear':          { en:'Clear & Start Over', zh:'清除并重新开始', es:'Limpiar y Comenzar de Nuevo', ko:'지우고 다시 시작', ja:'クリアしてやり直す', fr:'Effacer et Recommencer' },
+          'ws.practice.heading':     { en:'Practice Questions', zh:'练习题', es:'Preguntas de Práctica', ko:'연습 문제', ja:'練習問題', fr:'Questions d\'Entraînement' },
+          'ws.practice.subheading':  { en:'Questions generated by pattern matching from your notes — not AI.', zh:'通过模式匹配从笔记生成的问题——非 AI。', es:'Preguntas generadas por coincidencia de patrones — no IA.', ko:'노트에서 패턴 매칭으로 생성된 문제 — AI 아님.', ja:'ノートのパターンマッチングで生成された問題 — AIではありません。', fr:'Questions générées par correspondance de modèles — pas IA.' },
+          'ws.ask.heading':          { en:'Ask a Question', zh:'提问', es:'Hacer una Pregunta', ko:'질문하기', ja:'質問する', fr:'Poser une Question' },
+          'ws.ask.subheading':       { en:'Searches your notes by keyword matching — not AI. Returns the most relevant passage.', zh:'通过关键词匹配搜索笔记——非 AI。返回最相关的段落。', es:'Busca tus notas por coincidencia de palabras clave — no IA.', ko:'키워드 매칭으로 노트 검색 — AI 아님.', ja:'キーワードマッチングでノートを検索 — AIではありません。', fr:'Recherche dans vos notes par correspondance de mots-clés — pas IA.' },
+          'ws.visual.heading':       { en:'DNA Replication', zh:'DNA 复制', es:'Replicación del ADN', ko:'DNA 복제', ja:'DNA複製', fr:'Réplication de l\'ADN' },
+        };
+        // Merge into existing UI_STRINGS if accessible, otherwise patch via applyLanguage
+        if (typeof UI_STRINGS !== 'undefined') {
+          Object.assign(UI_STRINGS, extra);
+        }
+        // Re-apply language to pick up new keys
+        window.i18n.initI18n();
+      }
+    });
+
+  }());
+
+  // Shake animation for upload card
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-6px)}
+      40%{transform:translateX(6px)}
+      60%{transform:translateX(-4px)}
+      80%{transform:translateX(4px)}
+    }
+    .shake { animation: shake .5s ease; }
+  `;
+  document.head.appendChild(style);
+
+  // ================================================================
+  //  AI CONTROLLER
+  //  Wires the AI buttons to the local relay server (ai.js → server).
+  //  Degrades gracefully: if the server is off, shows a clear message
+  //  and the rule-based features remain fully usable.
+  // ================================================================
+  (function () {
+
+    // Read all extracted text from tutor.js module state via a helper.
+    // tutor.js keeps notesPages in module scope; we expose a getter here
+    // by reading the rendered extracted pages as a fallback.
+    function getLectureText() {
+      // Prefer the structured notesPages if tutor.js exposed it
+      if (window.getNotesText) {
+        const t = window.getNotesText();
+        if (t && t.trim().length > 0) return t;
+      }
+      // Fallback: scrape the rendered .page-text nodes
+      const nodes = document.querySelectorAll('#extractedPages .page-text');
+      return Array.from(nodes).map(n => n.textContent).join('\n\n').trim();
+    }
+
+    function currentLang() {
+      try { return localStorage.getItem('bl_lang') || 'en'; } catch (_) { return 'en'; }
+    }
+
+    function setStatus(el, msg, kind) {
+      if (!el) return;
+      el.textContent = msg || '';
+      el.className = 'ai-status' + (kind ? ' ' + kind : '');
+    }
+
+    // Adds a small "Save for demo" button after a real AI result.
+    // Only shown in LIVE mode (saving a replayed snapshot is pointless).
+    function addSaveForDemoButton(container, kind, data) {
+      if (window.isDemoMode && window.isDemoMode()) return;
+      if (!window.demoCapture) return;
+      const btn = document.createElement('button');
+      btn.className = 'demo-save-btn';
+      btn.type = 'button';
+      btn.textContent = '💾 Save for demo';
+      btn.title = 'Save this REAL result to replay offline during the demo';
+      const note = document.createElement('span');
+      note.className = 'demo-save-note';
+      btn.addEventListener('click', () => {
+        const msg = window.demoCapture(kind, data);
+        note.textContent = ' ' + msg;
+      });
+      const wrap = document.createElement('div');
+      wrap.className = 'demo-save-row';
+      wrap.appendChild(btn);
+      wrap.appendChild(note);
+      container.appendChild(wrap);
+    }
+
+    // Renders a friendly, student-safe error box (never raw API text).
+    // Adapts to context:
+    //  - Demo Mode + missing snapshot → honest "no saved demo" message, NO
+    //    misleading "Live AI unavailable" text, and no demo button.
+    //  - Live Mode failure → "Live AI unavailable" + "Switch to Demo" button.
+    function showAiErrorBox(container, e) {
+      container.innerHTML = '';
+      const inDemo = !!(window.isDemoMode && window.isDemoMode());
+      const code = e && e.code;
+      const box = document.createElement('div');
+      box.className = 'viz-none';
+
+      if (inDemo && code === 'no_snapshot') {
+        // Requirement #4: honest, no fabrication, no live-AI wording.
+        box.appendChild(el2('p', 'viz-none-title', 'No saved demo for this lecture'));
+        box.appendChild(el2('p', 'viz-none-text',
+          'Demo Mode can only show results that were saved earlier. There is no saved ' +
+          'example for this lecture yet, so nothing can be shown here. ' +
+          'Try a lecture that has a saved demo, or switch to Live Mode to generate new results.'));
+        container.appendChild(box);
+        return;
+      }
+
+      if (inDemo && code === 'demo_live_only') {
+        box.appendChild(el2('p', 'viz-none-title', 'Live-only feature'));
+        box.appendChild(el2('p', 'viz-none-text',
+          (e && e.message) || 'This feature is paused in Demo Mode.'));
+        container.appendChild(box);
+        return;
+      }
+
+      // Otherwise: a live-mode failure.
+      box.appendChild(el2('p', 'viz-none-title', 'Live AI is unavailable right now'));
+      box.appendChild(el2('p', 'viz-none-text', friendlyAiError(e)));
+      const btn = document.createElement('button');
+      btn.className = 'ai-action-btn';
+      btn.style.marginTop = '10px';
+      btn.textContent = 'Switch to Demo Mode';
+      btn.addEventListener('click', () => { if (window.setDemoMode) window.setDemoMode(true); });
+      box.appendChild(btn);
+      container.appendChild(box);
+    }
+
+    // Back-compat alias — existing call sites pass a message string OR nothing.
+    // We now route everything through showAiErrorBox with the error object.
+    function showLiveErrorWithDemo(container, _msgIgnored, errObj) {
+      showAiErrorBox(container, errObj || { code: 'unknown' });
+    }
+
+    // Maps a thrown LIVE AI error to a safe message. Never raw API text.
+    function friendlyAiError(e) {
+      const code = e && e.code;
+      if (code === 'permission_denied') {
+        return 'Live AI access is currently blocked for this project. ' +
+               'Switch to Demo Mode to present saved example results.';
+      }
+      if (code === 'daily_quota_exhausted') {
+        return 'Today\'s free AI quota is used up. Switch to Demo Mode to present saved results.';
+      }
+      if (code === 'rate_limited' || code === 'overloaded') {
+        return 'The AI service is busy. Wait a moment and try again, or switch to Demo Mode.';
+      }
+      // Network / server down / anything else: keep it generic + safe.
+      return 'Live AI could not be reached. Switch to Demo Mode to present saved results.';
+    }
+
+    // In Demo Mode, prepend a clear label so content is never mistaken for a
+    // freshly generated answer. The wording depends on how the demo content
+    // was produced (manually authored example vs. a real saved Gemini run).
+    function prependSavedLabel(container) {
+      if (!(window.isDemoMode && window.isDemoMode())) return;
+      const label = document.createElement('div');
+      label.className = 'demo-saved-label';
+      const src = window.__demoActiveSource || 'saved';
+      if (src === 'authored') {
+        // Honesty: this is a hand-written example, NOT live/real AI output.
+        label.textContent = 'Example study content (manually prepared for this demo) — not generated by AI';
+      } else {
+        const when = window.__demoActiveCapturedAt ? ' (captured ' + window.__demoActiveCapturedAt + ')' : '';
+        label.textContent = 'Saved AI result' + when + ' — captured earlier, not generated just now';
+      }
+      container.insertBefore(label, container.firstChild);
+    }
+
+    // Returns the correct attribution line for a result, honest about source.
+    // Returns '' (no attribution) when the content is a manually authored demo,
+    // so we never claim Gemini produced hand-written text.
+    function attribution(liveText) {
+      if (window.isDemoMode && window.isDemoMode()) {
+        const src = window.__demoActiveSource || 'saved';
+        if (src === 'authored') return 'Example content prepared for the demo — not AI-generated.';
+        return 'Saved result from an earlier real Google Gemini run.';
+      }
+      return liveText; // live mode: the real Gemini attribution
+    }
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ── AI availability check (updates badges) ────────────────────
+    async function refreshAiBadges() {
+      const available = window.ai ? await window.ai.isAvailable() : false;
+      document.querySelectorAll('.ai-badge').forEach(b => {
+        b.classList.toggle('ai-on', available);
+        b.title = available
+          ? 'AI server connected'
+          : 'AI server offline — start it (see server/README) or use rule-based features';
+      });
+      return available;
+    }
+    // Check on load and whenever the user returns to the tab
+    refreshAiBadges();
+    window.addEventListener('focus', refreshAiBadges);
+
+    // ── Generate Smart Notes ──────────────────────────────────────
+    const aiNotesBtn = document.getElementById('aiNotesBtn');
+    if (aiNotesBtn) {
+      aiNotesBtn.addEventListener('click', async () => {
+        const text = getLectureText();
+        const statusEl = document.getElementById('aiNotesStatus');
+        const resultEl = document.getElementById('aiNotesResult');
+        if (!text || text.length < 50) {
+          setStatus(statusEl, 'Upload or paste a lecture first.', 'err');
+          return;
+        }
+        setStatus(statusEl, 'Generating…', 'loading');
+        resultEl.innerHTML = '';
+        try {
+          const notes = await window.ai.generateNotes(text, currentLang());
+          window.__lastNotes = notes;
+          renderNotes(notes, resultEl);
+          prependSavedLabel(resultEl);
+          setStatus(statusEl, window.isDemoMode && window.isDemoMode() ? 'Loaded saved result.' : 'Done.', 'ok');
+          addSaveForDemoButton(resultEl, 'notes', notes);
+        } catch (e) {
+          setStatus(statusEl, '', '');
+          showAiErrorBox(resultEl, e);
+        }
+      });
+    }
+
+    function renderNotes(notes, el) {
+      if (!notes || !Array.isArray(notes.topics)) {
+        el.innerHTML = '<p class="ai-empty">The AI returned no structured notes. Try again.</p>';
+        return;
+      }
+      let html = '';
+      if (notes.title) html += `<h3 class="ai-notes-title">${esc(notes.title)}</h3>`;
+      notes.topics.forEach(t => {
+        html += `<div class="ai-topic"><h4>${esc(t.heading)}</h4>`;
+        if (Array.isArray(t.keyPoints) && t.keyPoints.length) {
+          html += '<ul>' + t.keyPoints.map(p => `<li>${esc(p)}</li>`).join('') + '</ul>';
+        }
+        if (Array.isArray(t.terms) && t.terms.length) {
+          html += '<dl class="ai-terms">' + t.terms.map(tm =>
+            `<dt>${esc(tm.term)}</dt><dd>${esc(tm.definition)}</dd>`).join('') + '</dl>';
+        }
+        html += '</div>';
+      });
+      if (Array.isArray(notes.takeaways) && notes.takeaways.length) {
+        html += '<div class="ai-takeaways"><h4>Key Takeaways</h4><ul>' +
+          notes.takeaways.map(t => `<li>${esc(t)}</li>`).join('') + '</ul></div>';
+      }
+      if (notes.uncertainty && notes.uncertainty.trim()) {
+        html += `<p class="ai-uncertainty">⚠️ ${esc(notes.uncertainty)}</p>`;
+      }
+      html += '<p class="ai-method">' + esc(attribution('Generated by Google Gemini from your lecture text.')) + '</p>';
+      el.innerHTML = html;
+    }
+
+    // ── Generate AI Quiz (primary practice feature) ──────────────
+    const aiQuizBtn = document.getElementById('aiQuizBtn');
+    // Holds the last quiz so "Try Again" can re-render the same questions.
+    let _currentQuiz = null;
+
+    function clearAiQuiz() {
+      _currentQuiz = null;
+      const resultEl = document.getElementById('aiQuizResult');
+      if (resultEl) resultEl.innerHTML = '';
+      const statusEl = document.getElementById('aiQuizStatus');
+      if (statusEl) setStatus(statusEl, '', '');
+    }
+    // Exposed so the upload flow can wipe a stale quiz on a new PDF (req #9).
+    window._clearAiQuiz = clearAiQuiz;
+
+    async function runQuizGeneration() {
+      const text = getLectureText();
+      const statusEl = document.getElementById('aiQuizStatus');
+      const resultEl = document.getElementById('aiQuizResult');
+      if (!text || text.length < 50) {
+        setStatus(statusEl, 'Upload a lecture first, then generate a quiz.', 'err');
+        return;
+      }
+      // Friendly offline check BEFORE attempting — no unreliable fallback.
+      const online = window.ai ? await window.ai.isAvailable() : false;
+      if (!online) {
+        resultEl.innerHTML = '';
+        const box = document.createElement('div');
+        box.className = 'viz-none';
+        box.appendChild(el2('p', 'viz-none-title', 'AI quiz is unavailable right now'));
+        box.appendChild(el2('p', 'viz-none-text',
+          'The AI server is offline or busy. Start it (see server/README) or wait a moment and try again. ' +
+          'We will not generate unreliable questions as a substitute.'));
+        resultEl.appendChild(box);
+        setStatus(statusEl, 'AI unavailable.', 'err');
+        return;
+      }
+
+      const count = parseInt(document.getElementById('aiQuizCount').value, 10);
+      const difficulty = document.getElementById('aiQuizDifficulty').value;
+      setStatus(statusEl, 'Generating questions from your lecture…', 'loading');
+      resultEl.innerHTML = '';
+      aiQuizBtn.disabled = true;
+      try {
+        const quiz = await window.ai.generateQuiz({
+          lectureText: text, count, difficulty, language: currentLang()
+        });
+        _currentQuiz = quiz;
+        window.__lastQuiz = quiz;
+        renderQuiz(quiz, resultEl);
+        prependSavedLabel(resultEl);
+        addSaveForDemoButton(resultEl, 'quiz', quiz);
+        const n = (quiz && Array.isArray(quiz.questions)) ? quiz.questions.length : 0;
+        setStatus(statusEl, n ? `Generated ${n} question${n !== 1 ? 's' : ''}.` : 'No questions generated.',
+                  n ? 'ok' : 'err');
+      } catch (e) {
+        setStatus(statusEl, '', '');
+        showAiErrorBox(resultEl, e);
+      } finally {
+        aiQuizBtn.disabled = false;
+      }
+    }
+
+    if (aiQuizBtn) aiQuizBtn.addEventListener('click', runQuizGeneration);
+
+    function renderQuiz(quiz, container) {
+      if (!quiz || !Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+        container.innerHTML = '';
+        const box = document.createElement('div');
+        box.className = 'viz-none';
+        box.appendChild(el2('p', 'viz-none-title', 'No questions could be generated'));
+        box.appendChild(el2('p', 'viz-none-text',
+          'The AI could not form reliable questions from this lecture text. Try a different lecture or a lower difficulty.'));
+        container.appendChild(box);
+        return;
+      }
+      const el = container; // the rest of this function writes into `container`
+      const letters = ['A', 'B', 'C', 'D'];
+      let html = '';
+      quiz.questions.forEach((q, i) => {
+        html += `<div class="ai-q" data-correct="${esc(q.correct)}" data-idx="${i}" data-concept="${esc(q.concept || '')}">`;
+        html += `<p class="ai-q-text"><strong>Q${i + 1}.</strong> ${esc(q.question)}</p>`;
+        html += '<div class="ai-q-opts">';
+        letters.forEach(L => {
+          if (q.options && q.options[L] != null) {
+            html += `<label class="ai-opt"><input type="radio" name="aiq${i}" value="${L}">`
+                 + `<span>${L}) ${esc(q.options[L])}</span></label>`;
+          }
+        });
+        html += '</div>';
+        html += `<div class="ai-q-feedback" id="aiqfb-${i}" aria-live="polite"></div>`;
+        html += `<script type="application/json" class="ai-q-data">${
+          JSON.stringify({ explanation: q.explanation || '', whyWrong: q.whyWrong || {}, sourceHint: q.sourceHint || '' })
+        }<\/script>`;
+        html += '</div>';
+      });
+      if (quiz.note && quiz.note.trim()) {
+        html += `<p class="ai-uncertainty">⚠️ ${esc(quiz.note)}</p>`;
+      }
+      html += '<div class="ai-quiz-actions">';
+      html += '<button class="ai-action-btn" id="aiQuizCheck">Check Answers</button>';
+      html += '</div>';
+      html += '<div class="ai-quiz-score" id="aiQuizScore" aria-live="polite" style="display:none;"></div>';
+      html += '<div class="ai-quiz-review" id="aiQuizReview" style="display:none;"></div>';
+      html += '<div class="ai-quiz-postactions" id="aiQuizPost" style="display:none;">';
+      html += '<button class="gen-retry-btn" id="aiQuizRetry">↺ Try Again</button>';
+      html += '<button class="gen-new-btn" id="aiQuizNew">↻ Generate New Questions</button>';
+      html += '</div>';
+      html += '<p class="ai-method">' + esc(attribution('Generated by Google Gemini from your current lecture.')) + '</p>';
+      el.innerHTML = html;
+
+      document.getElementById('aiQuizCheck').addEventListener('click', () => gradeAiQuiz(el));
+    }
+
+    function gradeAiQuiz(el) {
+      let score = 0, answered = 0, total = 0;
+      const missedConcepts = [];
+
+      el.querySelectorAll('.ai-q').forEach(card => {
+        total++;
+        const idx = card.getAttribute('data-idx');
+        const correct = card.getAttribute('data-correct');
+        const concept = card.getAttribute('data-concept') || '';
+        const chosen = card.querySelector(`input[name="aiq${idx}"]:checked`);
+        const fb = document.getElementById(`aiqfb-${idx}`);
+        let data = {};
+        try { data = JSON.parse(card.querySelector('.ai-q-data').textContent); } catch (_) {}
+
+        card.querySelectorAll('.ai-opt').forEach(o => o.classList.remove('ai-correct', 'ai-incorrect'));
+        const correctInput = card.querySelector(`input[value="${correct}"]`);
+        if (correctInput) correctInput.closest('.ai-opt').classList.add('ai-correct');
+
+        let html = '';
+        if (!chosen) {
+          html = '<p class="gf-warn">⚠ No answer selected.</p>';
+          if (concept) missedConcepts.push(concept);
+        } else {
+          answered++;
+          if (chosen.value === correct) {
+            score++;
+            html = '<p class="gf-correct">✓ Correct.</p>';
+          } else {
+            chosen.closest('.ai-opt').classList.add('ai-incorrect');
+            html = '<p class="gf-incorrect">✗ Incorrect.</p>';
+            if (concept) missedConcepts.push(concept);
+            const why = data.whyWrong && data.whyWrong[chosen.value];
+            if (why) html += `<p class="ai-why-wrong"><strong>Why your answer is wrong:</strong> ${esc(why)}</p>`;
+          }
+        }
+        if (data.explanation) html += `<p class="ai-explain"><strong>Explanation:</strong> ${esc(data.explanation)}</p>`;
+        if (data.sourceHint) html += `<p class="ai-source"><strong>From your lecture:</strong> “${esc(data.sourceHint)}”</p>`;
+        fb.innerHTML = html;
+        card.querySelectorAll('input[type=radio]').forEach(r => { r.disabled = true; });
+      });
+
+      // Score banner
+      const pct = total ? score / total : 0;
+      const scoreEl = document.getElementById('aiQuizScore');
+      if (scoreEl) {
+        let cls = pct === 1 ? 'perfect' : (pct >= 0.5 ? 'good' : 'tryagain');
+        scoreEl.className = 'ai-quiz-score ' + cls;
+        scoreEl.textContent = `Score: ${score} / ${total}`
+          + (pct === 1 ? ' — perfect!' : (pct >= 0.5 ? ' — nice work.' : ' — review and try again.'));
+        scoreEl.style.display = 'block';
+      }
+
+      // Concepts to review (unique, from missed questions)
+      const reviewEl = document.getElementById('aiQuizReview');
+      if (reviewEl) {
+        const unique = [...new Set(missedConcepts.filter(Boolean))];
+        if (unique.length) {
+          reviewEl.innerHTML = '';
+          reviewEl.appendChild(el2('p', 'ai-review-title', 'Concepts to review'));
+          const ul = el2('ul', 'ai-review-list');
+          unique.forEach(c => ul.appendChild(el2('li', null, c)));
+          reviewEl.appendChild(ul);
+          reviewEl.style.display = 'block';
+        } else {
+          reviewEl.style.display = 'none';
+        }
+      }
+
+      // Swap buttons
+      document.getElementById('aiQuizCheck').style.display = 'none';
+      const post = document.getElementById('aiQuizPost');
+      if (post) post.style.display = 'flex';
+
+      // Wire Try Again (same questions) and Generate New
+      const retry = document.getElementById('aiQuizRetry');
+      if (retry) retry.addEventListener('click', () => {
+        if (_currentQuiz) renderQuiz(_currentQuiz, el);
+      });
+      const gen = document.getElementById('aiQuizNew');
+      if (gen) gen.addEventListener('click', runQuizGeneration);
+    }
+
+    // tiny helper (separate name to avoid clashing with the SVG `el` above
+    // in this controller scope is already `el`; reuse it)
+    function el2(tag, cls, text) {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+
+    // ── Ask AI ────────────────────────────────────────────────────
+    const aiAskBtn = document.getElementById('aiAskBtn');
+    if (aiAskBtn) {
+      aiAskBtn.addEventListener('click', async () => {
+        const q = document.getElementById('questionInput').value.trim();
+        const statusEl = document.getElementById('aiAskStatus');
+        const resultEl = document.getElementById('aiAskResult');
+        if (!q) { setStatus(statusEl, 'Type a question first.', 'err'); return; }
+        const context = getLectureText();
+        setStatus(statusEl, 'Thinking…', 'loading');
+        resultEl.innerHTML = '';
+        try {
+          const r = await window.ai.ask(q, context, currentLang());
+          let html = `<div class="ai-answer"><p>${esc(r.answer)}</p>`;
+          if (r.caveat && r.caveat.trim()) html += `<p class="ai-uncertainty">⚠️ ${esc(r.caveat)}</p>`;
+          html += '<p class="ai-method">' + esc(attribution('Answered by Google Gemini using your lecture context.')) + '</p></div>';
+          resultEl.innerHTML = html;
+          setStatus(statusEl, 'Done.', 'ok');
+        } catch (e) {
+          setStatus(statusEl, '', '');
+          showAiErrorBox(resultEl, e);
+        }
+      });
+    }
+
+    // ── Visualize: mode toggle ────────────────────────────────────
+    // Tracks which lecture a cached visualization belongs to, so switching
+    // PDFs clears the stale diagram (requirement #11).
+    window._vizCacheKey = null;   // text signature of the visualized lecture
+    window._vizCacheData = null;  // last visualization object
+
+    const lectureModeBtn = document.getElementById('vizModeLecture');
+    const demoModeBtn     = document.getElementById('vizModeDemo');
+    const lectureModeDiv  = document.getElementById('vizLectureMode');
+    const demoModeDiv      = document.getElementById('vizDemoMode');
+
+    function setVizMode(mode) {
+      const lecture = (mode === 'lecture');
+      lectureModeBtn.classList.toggle('active', lecture);
+      demoModeBtn.classList.toggle('active', !lecture);
+      lectureModeDiv.style.display = lecture ? 'block' : 'none';
+      demoModeDiv.style.display    = lecture ? 'none' : 'block';
+    }
+    if (lectureModeBtn) lectureModeBtn.addEventListener('click', () => setVizMode('lecture'));
+    if (demoModeBtn)    demoModeBtn.addEventListener('click', () => setVizMode('demo'));
+
+    // Default mode depends on whether a lecture is loaded.
+    function defaultVizMode() {
+      setVizMode(window._notesLoaded ? 'lecture' : 'demo');
+    }
+    defaultVizMode();
+
+    // A cheap signature to detect when the loaded PDF has changed.
+    function lectureSignature(text) {
+      return (text ? text.length + '|' + text.slice(0, 80) : '');
+    }
+
+    // Clear any stale visualization when the lecture changes (req #11).
+    function resetVizIfLectureChanged() {
+      const sig = lectureSignature(getLectureText());
+      if (sig !== window._vizCacheKey) {
+        window._vizCacheKey = null;
+        window._vizCacheData = null;
+        const c = document.getElementById('vizContainer');
+        if (c && window.bioViz) {
+          window.bioViz.clear(c);
+          const ph = document.createElement('p');
+          ph.className = 'viz-placeholder';
+          ph.textContent = window._notesLoaded
+            ? 'Click "Visualize This Lecture" to generate an interactive diagram from this PDF.'
+            : 'Upload a lecture first, then generate a visualization.';
+          c.appendChild(ph);
+        }
+      }
+    }
+
+    // ── Visualize: generate button ────────────────────────────────
+    const vizBtn = document.getElementById('vizGenerateBtn');
+    if (vizBtn) {
+      vizBtn.addEventListener('click', async () => {
+        const statusEl  = document.getElementById('vizStatus');
+        const container = document.getElementById('vizContainer');
+        const text = getLectureText();
+        if (!text || text.length < 50) {
+          setStatus(statusEl, 'Upload or paste a lecture first.', 'err');
+          return;
+        }
+        setStatus(statusEl, 'Analyzing lecture…', 'loading');
+        try {
+          const viz = await window.ai.generateVisualization(text, currentLang());
+          // Cache against this lecture's signature
+          window._vizCacheKey  = lectureSignature(text);
+          window._vizCacheData = viz;
+          window.bioViz.render(container, viz);
+          prependSavedLabel(container);
+          if (viz && viz.type !== 'none') addSaveForDemoButton(container, 'visualization', viz);
+          setStatus(statusEl, viz && viz.type === 'none' ? 'No visualization possible.' : 'Done.',
+                    viz && viz.type === 'none' ? '' : 'ok');
+        } catch (e) {
+          window.bioViz.clear(container);
+          showAiErrorBox(container, e);
+          setStatus(statusEl, '', '');
+        }
+      });
+    }
+
+    // When the user opens the Visualize tab, pick the right default mode
+    // and clear any visualization left over from a previous PDF.
+    document.querySelectorAll('.ws-tab[data-panel="ws-visual"]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        defaultVizMode();
+        resetVizIfLectureChanged();
+      });
+    });
+
+    // Expose so the upload flow can reset the visualization on new PDF.
+    window._resetVizIfLectureChanged = resetVizIfLectureChanged;
+    window._defaultVizMode = defaultVizMode;
+
+  }());
+  </script>
+
+</body>
+</html>

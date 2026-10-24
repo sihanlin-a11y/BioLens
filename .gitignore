@@ -1,0 +1,17 @@
+# ── Secrets — never commit ──────────────────────────────
+server/.env
+.env
+*.key
+
+# ── Python ──────────────────────────────────────────────
+server/venv/
+venv/
+__pycache__/
+*.pyc
+
+# ── macOS ───────────────────────────────────────────────
+.DS_Store
+
+# ── NOTE ────────────────────────────────────────────────
+# The .kiro/ directory IS intentionally committed (Hackachusetts
+# requires it). Do NOT add .kiro/ here.
